@@ -1,0 +1,126 @@
+---
+title: "Assignment 5"
+author: "Rasmus Andersen"
+date: "30/11/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#2) Practice Web Scraping
+
+##Please find a tutorial with instructions on web scraping data on US police killings in this repository at https://github.com/adivea/KilledbyPolice2020.git . Clone it and depending on your familiarity with R, either
+
+###2.3) produce data visualisations that shed light on another interesting aspect of the police killing data
+
+
+# Load libraries
+
+library(tidyverse)
+library(rvest)
+
+site_to_scrape2013 <- read_html("https://killedbypolice.net/kbp2013")
+site_to_scrape2013_state <- read_html("https://killedbypolice.net/kbp2013")
+
+# Scrape the first page of site
+content2013 <- site_to_scrape2013 %>% 
+  html_nodes(".column-5") %>% 
+  html_text()
+
+content2013_state <- site_to_scrape2013_state %>% 
+  html_nodes(".column-6") %>% 
+  html_text()
+#I use the Google Chrome tool "SelectorGadget" to scrape the webpages
+
+# Scrape multiple pages
+for (i in kbp2014 & kbp2015 & kbp2016 & kbp2017 & kbp2018 & kbp2019 & kbp2020){
+  site_to_scrape <- read_html(paste0("https://killedbypolice.net/",i))
+
+  temp <- site_to_scrape %>% 
+    html_nodes(".column-8 , .column-7 , .column-6 , .column-5 , .column-4 , .column-3 , .column-1") %>% 
+    html_text()
+  
+  content <- append(content, temp)
+}
+
+# I write this to save my data into a excel spreadsheet
+write.csv(content2013, file = "content2013.csv", row.names = FALSE)
+write.csv(content2013_state, file = "content2013_state.csv", row.names = FALSE)
+
+# Errors
+## I could not get the scraping to be done automatically for all the different pages,
+### so I decided to just do them individually
+
+
+# Scrape the first page of site
+## I scrape 2016 and 2020 to see if there is a development
+
+site_to_scrape2016 <- read_html("https://killedbypolice.net/kbp2016")
+
+# Scrape the first page of site
+## 2016
+content2016 <- site_to_scrape2016 %>% 
+  html_nodes("td , th") %>% 
+  html_text()
+
+# I write this to save my data into a excel spreadsheet
+write.csv(content2016, file = "content2016.csv", row.names = FALSE)
+
+# Scrape the first page of site
+## 2020
+site_to_scrape2020 <- read_html("https://killedbypolice.net/kbp2020")
+
+content2020 <- site_to_scrape2020 %>% 
+  html_nodes("td:nth-child(6) , td:nth-child(5)") %>% 
+  html_text()
+
+# I write this to save my data into a excel spreadsheet
+write.csv(content2020, file = "content2020.csv", row.names = FALSE)
+
+#Since this still gives me bad date, because the website is badly made
+## I will instead do it even more manually
+### I think it would be interesting to compare police killings of races in different states over time
+
+td:nth-child(5) , td:nth-child(6)
+site_to_scrape2016_race <- read_html("https://killedbypolice.net/kbp2016")
+
+# Scrape the first page of site. Race
+## 2016
+content2016_race <- site_to_scrape2016_race %>% 
+  html_nodes("td:nth-child(5)") %>% 
+  html_text()
+
+# I write this to save my data into a excel spreadsheet
+write.csv(content2016_race, file = "content2016_race.csv", row.names = FALSE)
+
+site_to_scrape2016_state <- read_html("https://killedbypolice.net/kbp2016")
+
+# Scrape the first page of site. State
+## 2016
+content2016_state <- site_to_scrape2016_state %>% 
+  html_nodes("td:nth-child(6)") %>% 
+  html_text()
+
+# I write this to save my data into a excel spreadsheet
+write.csv(content2016_state, file = "content2016_state.csv", row.names = FALSE)
+
+# I will now create a figure to show the states with the most killings
+## And another to show the different killed races
+
+a <- content_state_and_race %>% 
+  ggplot(aes(x = state_us, y = race_ppl))+
+  geom_jitter(alpha = 0.5, aes(color = year_us))
+
+a = labs(title = "Police killings in the US in 2016")
+
+a <- ggplot(data = content_state_and_race, aes(x = state_us, y = race_ppl))
+a + geom_jitter(alpha = 0.5, aes(color = year_us))
+
+# Conclusion after many trials and tribulations
+##In the plots that I have made, I can now see that many statistics stay as they used to in terms of police killings,
+###however, we can see (perhaps because of Donald Trumps election and rhetoric) that especially police killings of Hispanics in namely
+#### Texas and California, which are two states with many people and many Hispanics are on the rise.
+##### It should howver be noted that the data set from 2016 is very much larger than 2013. Whether this depends on more killings or more
+###### comprehensive data, I cannot say.
+
