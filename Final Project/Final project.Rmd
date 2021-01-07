@@ -1,0 +1,60 @@
+---
+title: "Final project"
+author: "Rasmus Andersen"
+date: "6/1/2021"
+output:
+  html_document: default
+---
+
+# Install GGPLOT2 ----
+##### install.packages("ggplot2")
+##### library("ggplot2")
+##### ?ggplot
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Using the data to create visualizations
+### The data: "Danish_Parliament_2011_to_2019_Gender"
+
+##### First I define the ggplot with my data, just to try and get myself back into using R. I press ctrl+enter and realise I draw an empty plot, which means I am on the right track
+
+ggplot(data = Danish_Parliament_2011_to_2019_Gender, aes(x = Year,y = Men_elected_to_office))
+
+##### Next I use the cheatsheet to try and see if this coding would be a good way to show my statistics off. I realised though that this looked too messy and it was hard to determine, what the trends were.
+ggplot(Danish_Parliament_2011_to_2019_Gender, aes(Men_running_for_office, Men_elected_to_office)) +
+  geom_point(aes(color = Year)) +
+  geom_smooth(method="lm") +
+  coord_cartesian() +
+  scale_color_gradient() +
+  theme_bw()
+  
+##### I tried to make a geom_histogram and a geom_area, but realised that this code does not work, because it only works for single statistics.  
+
+a <- ggplot(Danish_Parliament_2011_to_2019_Gender, aes(Men_running_for_office, Men_elected_to_office))
+a + geom_histogram(stat_b)
+
+b <- ggplot(Danish_Parliament_2011_to_2019_Gender, aes(Year, Men_elected_to_office))
+b + geom_area(stat = "bin")
+
+##### I realised that geom_jitter() like was learnt in class would be a good way to show my statistics, but I soon decided on geom_smooth, because it shows an even prettier graph, where the points are connected by a trend line.
+c <- ggplot(Danish_Parliament_2011_to_2019_Gender, aes(Year, Men_elected_to_office))
+c + geom_jitter()
+
+##### These four codes are the ones I ended up using for my final graphs, where it shows the trends in women and men running for office and elected to office.
+d <- ggplot(Danish_Parliament_2011_to_2019_Gender, aes(Year, Men_elected_to_office))
+d + geom_smooth(model=lm)    
+
+e <- ggplot(Danish_Parliament_2011_to_2019_Gender, aes(Year, Women_elected_to_office))
+e + geom_smooth(model=lm)
+
+f <- ggplot(Danish_Parliament_2011_to_2019_Gender, aes(Year, Men_running_for_office))
+f + geom_smooth(model=lm)
+
+g <- ggplot(Danish_Parliament_2011_to_2019_Gender, aes(Year, Women_running_for_office))
+g + geom_smooth(model=lm)
+
+##### I conclude from my visualizations that there have not been any significant change in the last almost 20 years. It has stagnated and moves in zig-zag patterns with no clear sign of change.
+
+##### I tried for 3 hours with this link https://bookdown.org/yihui/rmarkdown-cookbook/fig-chunk.html and by watching Youtube videos to try and print my results in the document I knit, however, I was never able to achieve this. This is why the graphs are submitted in Github seperately.
